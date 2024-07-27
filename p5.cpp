@@ -16,24 +16,42 @@ template<class I> void OI(I a, I b){ while(a < b) cerr << *a << " \n"[next(a) ==
 #endif
 #define _ ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
-signed main(){_
-	ll n, k;
-	cin >> n >> k;
-	vector<ll> arr(n);
-	for (auto &i : arr) cin >> i;
-	sort(AI(arr));
-	ll r = n-1;
-	ll ans = LLONG_MAX;
-	for (ll l = 0; l < n; ++l) {
-		 while (r > 0 && abs(k - arr[l]*arr[r]) >= abs(k - arr[l]*arr[r-1])) {
-			 ans = min(ans, abs(k - arr[l]*arr[r]));
-			 ans = min(ans, abs(k - arr[l]*arr[r-1]));
-			 ans = min(ans, abs(k - arr[l+1]*arr[r-1]));
-			 r--;
-		}
-		ans = min(ans, abs(k - arr[l]*arr[r]));
+const ll mod = 998244353;
+
+ll mpow(ll a, ll n) {
+	ll ans = 1;
+	for (int i = 1; i <= n; i <<= 1) {
+		if (i & n) ans = a * ans % mod;
+		a = a*a%mod;
 	}
-	cout << ans << endl;
+	return ans%mod;
+}
+
+ll mdiv(ll a, ll b) {
+	a = (a%mod + mod)%mod;
+	b = (b%mod + mod)%mod;
+	ll k = mpow(b, mod-2);
+	return a * k % mod;	
+}
+
+signed main(){_
+	ll m, n, p, q;
+	cin >> m >> n >> p;
+	q = 100-p;
+	if (p == 0) {
+		cout << 0 << endl;
+	}
+	else if (p == q) {
+		cout << mdiv(m, m+n) << endl;
+	}
+	else {
+		auto k = mdiv(q, p);
+		auto a1 = mpow(k, m);
+		auto a2 = mpow(k, m+n);
+		ll ans = mdiv(a1-1, a2-1);
+		cout << ans << endl;
+	}
+
 
 	return 0;
 }
